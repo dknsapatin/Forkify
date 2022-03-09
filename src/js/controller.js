@@ -32,12 +32,17 @@ const renderSpinner = function (parentEl) {
 // Async function named showRecipe | Once called, it will fetch for the API in the background --Convert the response into JSON and save as a data
 const showRecipe = async function () {
   try {
+    // Getting the hash ID.
+    const id = window.location.hash.slice(1);
+    console.log(id);
+    if (!id) return;
+
     // 1) Loading Recipe
     //
     renderSpinner(recipeContainer);
     // Fetch for the API
     const res = await fetch(
-      'https://forkify-api.herokuapp.com/api/v2/recipes/5ed6604591c37cdc054bc886'
+      `https://forkify-api.herokuapp.com/api/v2/recipes/${id}` //Place the hash id to fetch the specifc object recipe
     );
     // Convert constant "res" to JSON | Save it to constant "data"
     const data = await res.json();
@@ -171,5 +176,10 @@ const showRecipe = async function () {
     alert(err);
   }
 };
-
+// Calling showRecipe | This will trigger fetching for the API
 showRecipe();
+
+// Creating an EventListener to check if hashes were changed.
+// window.addEventListener('hashchange', showRecipe);
+// window.addEventListener('load', showRecipe);
+['hashchange', 'load'].forEach(ev => window.addEventListener(ev, showRecipe));
