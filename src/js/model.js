@@ -1,3 +1,8 @@
+import 'regenerator-runtime/runtime';
+import { async } from 'regenerator-runtime';
+
+import { API_URL } from './config';
+import { getJSON } from './helpers';
 // ///////////////////////////////////////////////////////////////////////////////
 export const state = {
   recipe: {},
@@ -5,15 +10,7 @@ export const state = {
 // ///////////////////////////////////////////////////////////////////////////////
 export const loadRecipe = async function (id) {
   try {
-    // Fetch for the API
-    const res = await fetch(
-      `https://forkify-api.herokuapp.com/api/v2/recipes/${id}` //Place the hash id to fetch the specifc object recipe
-    );
-    // Convert constant "res" to JSON | Save it to constant "data"
-    const data = await res.json();
-
-    // Throw new error message base off of what the console says in each object
-    if (!res.ok) throw new Error(`${data.message} (${res.status})`);
+    const data = await getJSON(`${API_URL}/${id}`);
 
     // Changing underscore objects with "."
     const { recipe } = data.data;
@@ -29,6 +26,8 @@ export const loadRecipe = async function (id) {
     };
     console.log(state.recipe);
   } catch (err) {
-    alert(err);
+    // Temporary Error handling
+    console.error(`${err}💥💥💥`);
+    throw err;
   }
 };
