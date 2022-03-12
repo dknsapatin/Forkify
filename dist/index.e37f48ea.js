@@ -549,16 +549,11 @@ const controlRecipes = async function() {
     }
 };
 // ///////////////////////////////////////////////////////////////////////////////
-// Calling controlRecipes | This will trigger fetching for the API
-controlRecipes();
-// Creating an EventListener to check if hashes were changed.
-// window.addEventListener('hashchange', controlRecipes);
-// window.addEventListener('load', controlRecipes);
-[
-    'hashchange',
-    'load'
-].forEach((ev)=>window.addEventListener(ev, controlRecipes)
-);
+// Refer to recipeView.js function addHandlerRender()
+const init = function() {
+    _recipeViewJsDefault.default.addHandlerRender(controlRecipes);
+};
+init();
 
 },{"core-js/modules/web.immediate.js":"49tUX","./model.js":"Y4A21","./views/recipeView.js":"l60JC","regenerator-runtime/runtime":"dXNgZ","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"49tUX":[function(require,module,exports) {
 var $ = require('../internals/export');
@@ -2347,6 +2342,14 @@ class RecipeView {
         this.#parentElement.insertAdjacentHTML('afterbegin', markup);
     };
     // ///////////////////////////////////////////////////////////////////////////////
+    //Publisher subscriber pattern (Assigning controlRecipes as handler)
+    addHandlerRender(handler) {
+        [
+            'hashchange',
+            'load'
+        ].forEach((ev)=>window.addEventListener(ev, handler)
+        );
+    }
      #generateMarkup() {
         return `
             <figure class="recipe__fig">

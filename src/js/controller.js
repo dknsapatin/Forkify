@@ -30,12 +30,9 @@ const controlRecipes = async function () {
   }
 };
 // ///////////////////////////////////////////////////////////////////////////////
-// Calling controlRecipes | This will trigger fetching for the API
-controlRecipes();
 
-// Creating an EventListener to check if hashes were changed.
-// window.addEventListener('hashchange', controlRecipes);
-// window.addEventListener('load', controlRecipes);
-['hashchange', 'load'].forEach(ev =>
-  window.addEventListener(ev, controlRecipes)
-);
+// Refer to recipeView.js function addHandlerRender()
+const init = function () {
+  recipeView.addHandlerRender(controlRecipes);
+};
+init();

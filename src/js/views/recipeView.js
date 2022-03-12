@@ -35,6 +35,10 @@ class RecipeView {
   };
   // ///////////////////////////////////////////////////////////////////////////////
 
+  //Publisher subscriber pattern (Assigning controlRecipes as handler)
+  addHandlerRender(handler) {
+    ['hashchange', 'load'].forEach(ev => window.addEventListener(ev, handler));
+  }
   #generateMarkup() {
     return `
             <figure class="recipe__fig">
