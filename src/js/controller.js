@@ -26,11 +26,10 @@ const controlRecipes = async function () {
     // Replace hardcoded recipe source with assigned objects based on results
     // Catch if there are any errors and display them if it does.
   } catch (err) {
-    alert(err);
+    recipeView.renderError();
   }
 };
 // ///////////////////////////////////////////////////////////////////////////////
-
 // Refer to recipeView.js function addHandlerRender()
 const init = function () {
   recipeView.addHandlerRender(controlRecipes);

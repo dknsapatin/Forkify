@@ -28,6 +28,7 @@ export const loadRecipe = async function (id) {
   } catch (err) {
     // Temporary Error handling
     console.error(`${err}💥💥💥`);
+    //Throw err for controller.js to catch the error when called
     throw err;
   }
 };
