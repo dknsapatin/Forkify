@@ -16,13 +16,14 @@ class RecipeView {
     // Insert the new html markup to the DOM after clearing out innerHTML
     this.#parentElement.insertAdjacentHTML('afterbegin', markup);
   }
+
   // ///////////////////////////////////////////////////////////////////////////////
   // This clears out anything inside the recipe container
   #clear() {
     this.#parentElement.innerHTML = '';
   }
-  // ///////////////////////////////////////////////////////////////////////////////
 
+  // ///////////////////////////////////////////////////////////////////////////////
   // Render Spinner
   renderSpinner() {
     const markup = `
@@ -35,8 +36,8 @@ class RecipeView {
     this.#clear();
     this.#parentElement.insertAdjacentHTML('afterbegin', markup);
   }
-  // ///////////////////////////////////////////////////////////////////////////////
 
+  // ///////////////////////////////////////////////////////////////////////////////
   // Displaying Error message if model.js cannot find recipe
   renderError(message = this.#errorMessage) {
     const markup = ` <div class="error">
@@ -50,6 +51,7 @@ class RecipeView {
     this.#clear();
     this.#parentElement.insertAdjacentHTML('afterbegin', markup);
   }
+
   // ///////////////////////////////////////////////////////////////////////////////
   // Displaying Success message if model.js finds recipe
   renderMessage(message = this.#message) {
@@ -64,14 +66,14 @@ class RecipeView {
     this.#clear();
     this.#parentElement.insertAdjacentHTML('afterbegin', markup);
   }
-  // ///////////////////////////////////////////////////////////////////////////////
 
+  // ///////////////////////////////////////////////////////////////////////////////
   //Publisher subscriber pattern (Assigning controlRecipes as handler)
   addHandlerRender(handler) {
     ['hashchange', 'load'].forEach(ev => window.addEventListener(ev, handler));
   }
-  // ///////////////////////////////////////////////////////////////////////////////
 
+  // ///////////////////////////////////////////////////////////////////////////////
   #generateMarkup() {
     return `
             <figure class="recipe__fig">

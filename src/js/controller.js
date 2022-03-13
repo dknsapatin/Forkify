@@ -1,21 +1,19 @@
 // Importing Model and View
 import * as model from './model.js';
 import recipeView from './views/recipeView.js';
+import searchView from './views/searchView.js';
 
 import 'core-js/stable';
 import 'regenerator-runtime/runtime';
+import { async } from 'regenerator-runtime/runtime';
 
-const recipeContainer = document.querySelector('.recipe');
-// ///////////////////////////////////////////////////////////////////////////////
-
-// https://forkify-api.herokuapp.com/v2
 // ///////////////////////////////////////////////////////////////////////////////
 // Async function named controlRecipes | Once called, it will fetch for the API in the background --Convert the response into JSON and save as a data
 const controlRecipes = async function () {
   try {
     // Getting the hash ID.
     const id = window.location.hash.slice(1);
-    console.log(id);
+    // console.log(id);
     if (!id) return;
 
     recipeView.renderSpinner();
@@ -29,9 +27,29 @@ const controlRecipes = async function () {
     recipeView.renderError();
   }
 };
+
 // ///////////////////////////////////////////////////////////////////////////////
-// Refer to recipeView.js function addHandlerRender()
+const controlSearchResults = async function () {
+  try {
+    // 1) Call getQuery from searchView.js
+    const query = searchView.getQuery();
+    // If there arent any value inside the search field (query), just return
+    if (!query) return;
+
+    // 2) Call loadSearchResults from model.js
+    await model.loadSearchResults(query);
+
+    // Render Results
+    console.log(model.state.search.results);
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+// ///////////////////////////////////////////////////////////////////////////////
+// Refer to views function
 const init = function () {
   recipeView.addHandlerRender(controlRecipes);
+  searchView.addHandlerSearch(controlSearchResults);
 };
 init();

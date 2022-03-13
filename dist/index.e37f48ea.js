@@ -525,17 +525,16 @@ var _webImmediateJs = require("core-js/modules/web.immediate.js");
 var _modelJs = require("./model.js");
 var _recipeViewJs = require("./views/recipeView.js");
 var _recipeViewJsDefault = parcelHelpers.interopDefault(_recipeViewJs);
+var _searchViewJs = require("./views/searchView.js");
+var _searchViewJsDefault = parcelHelpers.interopDefault(_searchViewJs);
 var _runtime = require("regenerator-runtime/runtime");
-const recipeContainer = document.querySelector('.recipe');
-// ///////////////////////////////////////////////////////////////////////////////
-// https://forkify-api.herokuapp.com/v2
 // ///////////////////////////////////////////////////////////////////////////////
 // Async function named controlRecipes | Once called, it will fetch for the API in the background --Convert the response into JSON and save as a data
 const controlRecipes = async function() {
     try {
         // Getting the hash ID.
         const id = window.location.hash.slice(1);
-        console.log(id);
+        // console.log(id);
         if (!id) return;
         _recipeViewJsDefault.default.renderSpinner();
         // 1) Loading Recipe
@@ -549,13 +548,29 @@ const controlRecipes = async function() {
     }
 };
 // ///////////////////////////////////////////////////////////////////////////////
-// Refer to recipeView.js function addHandlerRender()
+const controlSearchResults = async function() {
+    try {
+        // 1) Call getQuery from searchView.js
+        const query = _searchViewJsDefault.default.getQuery();
+        // If there arent any value inside the search field (query), just return
+        if (!query) return;
+        // 2) Call loadSearchResults from model.js
+        await _modelJs.loadSearchResults(query);
+        // Render Results
+        console.log(_modelJs.state.search.results);
+    } catch (err) {
+        console.log(err);
+    }
+};
+// ///////////////////////////////////////////////////////////////////////////////
+// Refer to views function
 const init = function() {
     _recipeViewJsDefault.default.addHandlerRender(controlRecipes);
+    _searchViewJsDefault.default.addHandlerSearch(controlSearchResults);
 };
 init();
 
-},{"core-js/modules/web.immediate.js":"49tUX","./model.js":"Y4A21","./views/recipeView.js":"l60JC","regenerator-runtime/runtime":"dXNgZ","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"49tUX":[function(require,module,exports) {
+},{"core-js/modules/web.immediate.js":"49tUX","./model.js":"Y4A21","./views/recipeView.js":"l60JC","./views/searchView.js":"9OQAM","regenerator-runtime/runtime":"dXNgZ","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}],"49tUX":[function(require,module,exports) {
 var $ = require('../internals/export');
 var global = require('../internals/global');
 var task = require('../internals/task');
@@ -1623,12 +1638,18 @@ parcelHelpers.export(exports, "state", ()=>state
 );
 parcelHelpers.export(exports, "loadRecipe", ()=>loadRecipe
 );
+parcelHelpers.export(exports, "loadSearchResults", ()=>loadSearchResults
+);
 var _runtime = require("regenerator-runtime/runtime");
 var _regeneratorRuntime = require("regenerator-runtime");
 var _config = require("./config");
 var _helpers = require("./helpers");
 const state = {
     recipe: {
+    },
+    search: {
+        query: '',
+        results: []
     }
 };
 const loadRecipe = async function(id) {
@@ -1651,6 +1672,25 @@ const loadRecipe = async function(id) {
         // Temporary Error handling
         console.error(`${err}💥💥💥`);
         //Throw err for controller.js to catch the error when called
+        throw err;
+    }
+};
+const loadSearchResults = async function(query) {
+    try {
+        state.search.query = query; // Save each query input into state.
+        const data = await _helpers.getJSON(`${_config.API_URL}?search=${query}`);
+        console.log(data);
+        // Save each data recipe array into state | Map each array and return its values
+        state.search.results = data.data.recipes.map((rec)=>{
+            return {
+                id: rec.id,
+                title: rec.title,
+                publisher: rec.publisher,
+                image: rec.image_url
+            };
+        });
+    } catch (err) {
+        console.error(`${err}💥💥💥`);
         throw err;
     }
 };
@@ -2769,6 +2809,32 @@ Fraction.primeFactors = function(n) {
 };
 module.exports.Fraction = Fraction;
 
-},{}]},["ddCAb","aenu9"], "aenu9", "parcelRequire3a11")
+},{}],"9OQAM":[function(require,module,exports) {
+var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
+parcelHelpers.defineInteropFlag(exports);
+class SearchView {
+    #parentEl = document.querySelector('.search');
+    getQuery() {
+        //   Get the value of the search field
+        const query = this.#parentEl.querySelector('.search__field').value;
+        // Clears the input field for the next search input value
+        this.#clearInput();
+        return query;
+    }
+     #clearInput() {
+        return this.#parentEl.querySelector('.search__field').value = '';
+    }
+    // ///////////////////////////////////////////////////////////////////////////////
+    //Publisher subscriber pattern (Assigning controlRecipes as handler)
+    addHandlerSearch(handler) {
+        this.#parentEl.addEventListener('submit', function(e) {
+            e.preventDefault();
+            handler();
+        });
+    }
+}
+exports.default = new SearchView();
+
+},{"@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["ddCAb","aenu9"], "aenu9", "parcelRequire3a11")
 
 //# sourceMappingURL=index.e37f48ea.js.map
