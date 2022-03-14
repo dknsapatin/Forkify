@@ -530,6 +530,8 @@ var _searchViewJsDefault = parcelHelpers.interopDefault(_searchViewJs);
 var _resultsViewJs = require("./views/resultsView.js");
 var _resultsViewJsDefault = parcelHelpers.interopDefault(_resultsViewJs);
 var _runtime = require("regenerator-runtime/runtime");
+// Coming from parcel
+if (module.hot) module.hot.accept;
 // ///////////////////////////////////////////////////////////////////////////////
 // Async function named controlRecipes | Once called, it will fetch for the API in the background --Convert the response into JSON and save as a data
 const controlRecipes = async function() {
@@ -560,7 +562,7 @@ const controlSearchResults = async function() {
         // 2) Call loadSearchResults from model.js
         await _modelJs.loadSearchResults(query);
         // Render Results
-        console.log(_modelJs.state.search.results);
+        _resultsViewJsDefault.default.render(_modelJs.state.search.results);
     } catch (err) {
         console.log(err);
     }
@@ -2466,9 +2468,7 @@ class RecipeView extends _viewDefault.default {
             </div>
 
             <div class="recipe__user-generated">
-              <svg>
-                <use href="${_iconsSvgDefault.default}#icon-user"></use>
-              </svg>
+              
             </div>
             <button class="btn--round">
               <svg class="">
@@ -2532,6 +2532,9 @@ class View {
     _data;
     // ///////////////////////////////////////////////////////////////////////////////
     render(data) {
+        // if there is no data || or if there is data but the length is 0
+        if (!data || Array.isArray(data) && data.length === 0) // return the error message
+        return this.renderError();
         //data AKA model.state.recipe from controller.js
         this._data = data; //stores model.state.recipe to data
         const markup = this._generateMarkup();
@@ -2909,11 +2912,33 @@ var parcelHelpers = require("@parcel/transformer-js/src/esmodule-helpers.js");
 parcelHelpers.defineInteropFlag(exports);
 var _view = require("./View");
 var _viewDefault = parcelHelpers.interopDefault(_view);
+var _iconsSvg = require("url:../../img/icons.svg");
+var _iconsSvgDefault = parcelHelpers.interopDefault(_iconsSvg);
 class ResultsView extends _viewDefault.default {
     _parentElement = document.querySelector('.results');
+    _errorMessage = 'No recipes found! Please try again!';
+    _message = '';
+    _generateMarkup() {
+        return this._data.map(this._generateMarkupPreview).join('');
+    }
+    _generateMarkupPreview(result) {
+        return `
+    <li class="preview">
+            <a class="preview__link" href="#${result.id}">
+              <figure class="preview__fig">
+                <img src="${result.image}" alt="${result.title}" />
+              </figure>
+              <div class="preview__data">
+                <h4 class="preview__title">${result.title}</h4>
+                <p class="preview__publisher">${result.publisher}</p>
+                
+              </div>
+            </a>
+          </li>`;
+    }
 }
 exports.default = new ResultsView();
 
-},{"./View":"5cUXS","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["ddCAb","aenu9"], "aenu9", "parcelRequire3a11")
+},{"./View":"5cUXS","url:../../img/icons.svg":"loVOp","@parcel/transformer-js/src/esmodule-helpers.js":"gkKU3"}]},["ddCAb","aenu9"], "aenu9", "parcelRequire3a11")
 
 //# sourceMappingURL=index.e37f48ea.js.map

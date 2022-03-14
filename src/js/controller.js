@@ -8,6 +8,11 @@ import 'core-js/stable';
 import 'regenerator-runtime/runtime';
 import { async } from 'regenerator-runtime/runtime';
 
+// Coming from parcel
+if (module.hot) {
+  module.hot.accept;
+}
+
 // ///////////////////////////////////////////////////////////////////////////////
 // Async function named controlRecipes | Once called, it will fetch for the API in the background --Convert the response into JSON and save as a data
 const controlRecipes = async function () {
@@ -42,7 +47,7 @@ const controlSearchResults = async function () {
     await model.loadSearchResults(query);
 
     // Render Results
-    console.log(model.state.search.results);
+    resultsView.render(model.state.search.results);
   } catch (err) {
     console.log(err);
   }

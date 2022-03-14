@@ -5,6 +5,11 @@ export default class View {
 
   // ///////////////////////////////////////////////////////////////////////////////
   render(data) {
+    // if there is no data || or if there is data but the length is 0
+    if (!data || (Array.isArray(data) && data.length === 0))
+      // return the error message
+      return this.renderError();
+
     //data AKA model.state.recipe from controller.js
     this._data = data; //stores model.state.recipe to data
     const markup = this._generateMarkup();
