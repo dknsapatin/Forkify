@@ -9,9 +9,9 @@ import 'regenerator-runtime/runtime';
 import { async } from 'regenerator-runtime/runtime';
 
 // Coming from parcel
-if (module.hot) {
-  module.hot.accept;
-}
+// if (module.hot) {
+//   module.hot.accept;
+// }
 
 // ///////////////////////////////////////////////////////////////////////////////
 // Async function named controlRecipes | Once called, it will fetch for the API in the background --Convert the response into JSON and save as a data
@@ -47,7 +47,8 @@ const controlSearchResults = async function () {
     await model.loadSearchResults(query);
 
     // Render Results
-    resultsView.render(model.state.search.results);
+    // resultsView.render(model.state.search.results);
+    resultsView.render(model.getSearchResultsPage());
   } catch (err) {
     console.log(err);
   }
