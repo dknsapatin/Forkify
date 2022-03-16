@@ -10,9 +10,9 @@ import 'regenerator-runtime/runtime';
 import { async } from 'regenerator-runtime/runtime';
 
 // Coming from parcel
-// if (module.hot) {
-//   module.hot.accept;
-// }
+if (module.hot) {
+  module.hot.accept;
+}
 
 // ///////////////////////////////////////////////////////////////////////////////
 // Async function named controlRecipes | Once called, it will fetch for the API in the background --Convert the response into JSON and save as a data
@@ -22,8 +22,8 @@ const controlRecipes = async function () {
     const id = window.location.hash.slice(1);
     // console.log(id);
     if (!id) return;
-
     recipeView.renderSpinner();
+
     // 1) Loading Recipe
     await model.loadRecipe(id);
     // 2) Rendering Recipe to "render(data)" recipeView.js
@@ -69,9 +69,19 @@ const controlPagination = function (goToPage) {
 };
 
 // ///////////////////////////////////////////////////////////////////////////////
+const controlServings = function (newServings) {
+  // Update the recipe servings (in state)
+  model.updateServings(newServings);
+
+  // Update the recipe view
+  recipeView.render(model.state.recipe);
+};
+
+// ///////////////////////////////////////////////////////////////////////////////
 // Refer to views function
 const init = function () {
   recipeView.addHandlerRender(controlRecipes);
+  recipeView.addHandlerUpdateServings(controlServings);
   searchView.addHandlerSearch(controlSearchResults);
   paginationView.addHandlerClick(controlPagination);
 };
