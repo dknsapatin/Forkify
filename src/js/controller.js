@@ -28,7 +28,6 @@ const controlRecipes = async function () {
     await model.loadRecipe(id);
     // 2) Rendering Recipe to "render(data)" recipeView.js
     recipeView.render(model.state.recipe);
-    // Replace hardcoded recipe source with assigned objects based on results
     // Catch if there are any errors and display them if it does.
   } catch (err) {
     recipeView.renderError();

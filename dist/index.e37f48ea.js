@@ -547,7 +547,6 @@ const controlRecipes = async function() {
         await _modelJs.loadRecipe(id);
         // 2) Rendering Recipe to "render(data)" recipeView.js
         _recipeViewJsDefault.default.render(_modelJs.state.recipe);
-    // Replace hardcoded recipe source with assigned objects based on results
     // Catch if there are any errors and display them if it does.
     } catch (err) {
         _recipeViewJsDefault.default.renderError();
@@ -2411,60 +2410,6 @@ class RecipeView extends _viewDefault.default {
     _message = '';
     _data;
     // ///////////////////////////////////////////////////////////////////////////////
-    render(data) {
-        //data AKA model.state.recipe from controller.js
-        this._data = data; //stores model.state.recipe to data
-        const markup = this._generateMarkup();
-        this._clear();
-        // Insert the new html markup to the DOM after clearing out innerHTML
-        this._parentElement.insertAdjacentHTML('afterbegin', markup);
-    }
-    // ///////////////////////////////////////////////////////////////////////////////
-    // This clears out anything inside the recipe container
-    _clear() {
-        this._parentElement.innerHTML = '';
-    }
-    // ///////////////////////////////////////////////////////////////////////////////
-    // Render Spinner
-    renderSpinner() {
-        const markup = `
-    <div class="spinner">
-    <svg>
-      <use href="${_iconsSvgDefault.default}#icon-loader"></use>
-    </svg>
-  </div>`;
-        this._clear();
-        this._parentElement.insertAdjacentHTML('afterbegin', markup);
-    }
-    // ///////////////////////////////////////////////////////////////////////////////
-    // Displaying Error message if model.js cannot find recipe
-    renderError(message = this._errorMessage) {
-        const markup = ` <div class="error">
-    <div>
-      <svg>
-        <use href="${_iconsSvgDefault.default}#icon-alert-triangle"></use>
-      </svg>
-    </div>
-    <p>${message}</p>
-  </div> `;
-        this._clear();
-        this._parentElement.insertAdjacentHTML('afterbegin', markup);
-    }
-    // ///////////////////////////////////////////////////////////////////////////////
-    // Displaying Success message if model.js finds recipe
-    renderMessage(message = this._message) {
-        const markup = ` <div class="message">
-    <div>
-      <svg>
-        <use href="${_iconsSvgDefault.default}#icon-smile"></use>
-      </svg>
-    </div>
-    <p>${message}</p>
-  </div> `;
-        this._clear();
-        this._parentElement.insertAdjacentHTML('afterbegin', markup);
-    }
-    // ///////////////////////////////////////////////////////////////////////////////
     //Publisher subscriber pattern (Assigning controlRecipes as handler)
     addHandlerRender(handler) {
         [
@@ -2477,9 +2422,8 @@ class RecipeView extends _viewDefault.default {
         this._parentElement.addEventListener('click', function(e) {
             const btn = e.target.closest('.btn--update-servings');
             if (!btn) return;
-            const updateTo = +btn.dataset.updateTo;
-            console.log(updateTo);
-            handler(updateTo);
+            const { updateTo  } = btn.dataset;
+            if (+updateTo > 0) handler(+updateTo);
         });
     }
     // ///////////////////////////////////////////////////////////////////////////////
